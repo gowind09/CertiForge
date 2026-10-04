@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f5f7fb"><title>CertiForge — Certificate Designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#" aria-label="CertiForge home"><span class="brand-mark">C</span><span>certi<span>forge</span></span></a>
+    <div class="workspace-label">WORKSPACE</div>
+    <nav class="main-nav" aria-label="Main navigation">
+      <button class="nav-item active" data-view="dashboard"><span class="nav-icon">⌂</span> Dashboard</button>
+      <button class="nav-item" data-view="editor"><span class="nav-icon">✳</span> Create certificate</button>
+      <button class="nav-item" data-view="templates"><span class="nav-icon">▦</span> Templates</button>
+      <button class="nav-item" data-view="designs"><span class="nav-icon">▤</span> My designs <span class="nav-count" id="designCount">0</span></button>
+    </nav>
+    <div class="sidebar-bottom"><div class="plan-card"><div class="plan-icon">✦</div><strong>Your creative space</strong><p>Your designs are saved securely in this browser.</p><button id="newFromSide" class="text-button">Create something new <span>→</span></button></div><button class="nav-item" data-view="settings"><span class="nav-icon">⚙</span> Settings</button><div class="profile"><div class="avatar">G</div><div><strong>Guest designer</strong><small>Personal workspace</small></div><span class="more">···</span></div></div>
+  </aside>
+  <main class="main-area">
+    <header class="topbar"><button class="icon-button menu-button" id="menuToggle" aria-label="Toggle navigation">☰</button><div class="crumbs"><span>Workspace</span><b>/</b><strong id="crumb">Dashboard</strong></div><div class="top-actions"><span class="autosave" id="saveStatus"><i></i> All changes saved</span><button class="icon-button" id="helpButton" aria-label="Help">?</button><button class="outline-button auth-trigger" data-auth-mode="login">Log in</button><button class="outline-button auth-trigger" data-auth-mode="signup">Sign up</button><button class="outline-button hidden" id="signOutButton">Sign out</button><button class="primary small" data-action="new">＋ <span>Create certificate</span></button></div></header>
+    <div class="content">
+      <section class="view active" id="dashboardView">
+        <div class="welcome-row"><div><div class="eyebrow"><span class="spark">✦</span> YOUR CREATIVE WORKSPACE</div><h1>Make recognition <em>memorable.</em></h1><p class="subhead">Design and share certificates that celebrate every achievement.</p></div><button class="primary" data-action="new">＋ Create a certificate</button></div>
+        <div class="stats-grid"><article class="stat-card"><span class="stat-icon lavender">▤</span><div><small>Total designs</small><strong id="statDesigns">0</strong></div><span class="stat-note">saved in your workspace</span></article><article class="stat-card"><span class="stat-icon mint">✧</span><div><small>Templates</small><strong>8</strong></div><span class="stat-note">ready to make your own</span></article><article class="stat-card"><span class="stat-icon peach">↗</span><div><small>Made for print</small><strong>A4</strong></div><span class="stat-note">beautiful at any size</span></article></div>
+        <div class="section-heading"><div><h2>Start with a template</h2><p>Find the right look for your next celebration.</p></div><button class="link-button" data-view="templates">Browse all templates <span>→</span></button></div>
+        <div class="template-grid" id="dashboardTemplates"></div><div class="section-heading event-heading"><div><h2>Certificates for every occasion</h2><p>Start with wording tailored to the moment.</p></div></div><div class="event-preset-grid" id="dashboardEventPresets"></div>
+        <div class="section-heading recent-heading"><div><h2>Recently designed</h2><p>Pick up where you left off.</p></div><button class="link-button" data-view="designs">View all <span>→</span></button></div>
+        <div class="recent-list" id="recentList"></div>
+      </section>
+      <section class="view" id="templatesView"><div class="page-heading"><div><div class="eyebrow">THE TEMPLATE LIBRARY</div><h1>A little inspiration.</h1><p class="subhead">108 distinctive starting points for every kind of achievement.</p></div><label class="template-search"><span>⌕</span><input id="templateSearch" type="search" placeholder="Search templates…" aria-label="Search templates"></label></div><div class="template-result-count" id="templateResultCount">108 templates</div><div class="section-heading event-library-heading"><div><h2>Event-ready wording</h2><p>Choose an occasion to open a prefilled, editable certificate.</p></div></div><div class="event-preset-grid" id="libraryEventPresets"></div><div class="section-heading template-library-heading"><div><h2>Design styles</h2><p>Pick a visual style and customize every detail.</p></div></div><div class="template-grid full-grid" id="allTemplates"></div></section>
+      <section class="view" id="designsView"><div class="page-heading"><div><div class="eyebrow">YOUR WORKSPACE</div><h1>My designs<span class="period">.</span></h1><p class="subhead">Your certificates, ready whenever you need them.</p></div><button class="primary" data-action="new">＋ New design</button></div><div class="saved-grid" id="savedGrid"></div></section>
+      <section class="view editor-view" id="editorView">
+        <div class="editor-toolbar"><div><button class="back-link" data-view="dashboard">← Back</button><span class="toolbar-divider"></span><input class="design-title" id="designName" value="Untitled certificate" aria-label="Design name"><span class="edit-pencil">✎</span></div><div class="toolbar-actions"><button class="tool-button" id="undoBtn" title="Undo (Ctrl+Z)">↶</button><button class="tool-button" id="redoBtn" title="Redo (Ctrl+Y)">↷</button><span class="toolbar-divider"></span><button class="outline-button" id="saveButton">Save design</button><div class="export-wrap"><button class="primary small" id="downloadMenu" aria-haspopup="true" aria-expanded="false">↓ Export</button><div class="export-menu hidden" id="exportMenu" role="menu"><button role="menuitem" data-export="png">Download PNG</button><button role="menuitem" data-export="jpg">Download JPG</button><button role="menuitem" data-export="pdf">Download PDF</button><button role="menuitem" data-export="print">Print certificate</button></div></div></div></div>
+        <div class="editor-layout">
+          <aside class="properties">
+            <div class="property-tabs"><button class="property-tab active" data-panel="contentPanel">Content</button><button class="property-tab" data-panel="stylePanel">Style</button><button class="property-tab" data-panel="elementsPanel">Elements</button></div>
+            <div class="property-panel active" id="contentPanel">
+              <div class="panel-intro"><strong>Certificate details</strong><small>Make it personal. Changes appear instantly.</small></div>
+              <div class="field"><label for="title">Certificate title <b>*</b></label><input id="title" value="Certificate of Achievement"></div>
+              <div class="field"><label for="recipient">Recipient name <b>*</b></label><input id="recipient" value="Alexandra Morgan"></div>
+              <div class="field"><label for="subtitle">Subtitle / achievement</label><input id="subtitle" value="is hereby recognized for"></div>
+              <div class="field"><label for="course">Course or event name</label><input id="course" value="EXCELLENCE IN DESIGN"></div>
+              <div class="field"><label for="description">Description</label><textarea id="description" rows="3">Outstanding dedication, creativity, and commitment to excellence.</textarea></div>
+              <div class="field"><label for="organization">Organization name <b>*</b></label><input id="organization" value="NORTHSTAR ACADEMY"></div>
+              <div class="field two-col"><div><label for="date">Date <b>*</b></label><input type="date" id="date"></div><div><label for="location">Location</label><input id="location" value="New York, NY"></div></div>
+              <div class="field two-col"><div><label for="certId">Certificate ID</label><input id="certId" value="CERT-2026-000001"></div><div><label>&nbsp;</label><button class="outline-button full-width" id="generateId">↻ Generate ID</button></div></div>
+              <div class="field"><label for="issuedBy">Issued by</label><input id="issuedBy" value="Office of the Director"></div>
+              <div class="field two-col"><div><label for="sign1">Signatory name</label><input id="sign1" value="Jordan Ellis"></div><div><label for="role1">Designation</label><input id="role1" value="Director"></div></div>
+              <div class="field two-col"><div><label for="sign2">Second signatory</label><input id="sign2" value="Casey Nguyen"></div><div><label for="role2">Designation</label><input id="role2" value="Program Lead"></div></div>
+              <div id="extraSignatories"></div><button class="outline-button full-width add-signatory" id="addSignatory">＋ Add another signatory</button>
+              <details class="more-fields"><summary>More certificate details</summary><div class="field"><label for="additional">Additional text</label><textarea id="additional" rows="2" placeholder="Add a personal note..."></textarea></div><div class="field"><label for="qrText">Verification URL or QR text</label><input id="qrText" placeholder="https://example.com/verify"></div></details>
+              <div class="panel-footer"><span class="required-note"><b>*</b> Required fields</span><button class="text-button" id="clearForm">Clear form</button></div>
+            </div>
+            <div class="property-panel" id="stylePanel"><div class="panel-intro"><strong>Make it yours</strong><small>Fine-tune colors and type.</small></div>
+              <div class="field"><label for="templateSelect">Design template</label><select id="templateSelect"></select></div>
+              <div class="color-row"><label>Background<input type="color" id="bgColor" value="#fffdf8"></label><label>Border<input type="color" id="borderColor" value="#c7a96b"></label></div>
+              <div class="color-row"><label>Accent<input type="color" id="accentColor" value="#aa8544"></label><label>Text<input type="color" id="textColor" value="#253044"></label></div>
+              <div class="field"><label for="fontFamily">Font family</label><select id="fontFamily"><option>Playfair Display</option><option>DM Sans</option><option>Montserrat</option><option>Poppins</option><option>Roboto</option><option>Merriweather</option><option>Cinzel</option><option>Georgia</option></select></div>
+              <div class="field"><label for="alignment">Text alignment</label><select id="alignment"><option value="center">Centered</option><option value="left">Left aligned</option></select></div>
+              <div class="field range-field"><label for="borderWidth">Border thickness <span id="borderValue">2 px</span></label><input type="range" min="1" max="9" value="2" id="borderWidth"></div>
+              <div class="field range-field"><label for="nameSize">Recipient name size <span id="nameValue">40 px</span></label><input type="range" min="26" max="56" value="40" id="nameSize"></div>
+              <div class="field range-field"><label for="titleSize">Title size <span id="titleValue">17 px</span></label><input type="range" min="12" max="28" value="17" id="titleSize"></div>
+              <div class="field upload-field"><label for="logoUpload">Organization logo</label><input type="file" id="logoUpload" accept="image/png,image/jpeg,image/webp"><small>PNG, JPG or WebP · up to 5 MB</small></div>
+              <div class="field upload-field"><label for="photoUpload">Recipient photo <span class="optional">Optional</span></label><input type="file" id="photoUpload" accept="image/png,image/jpeg,image/webp"></div>
+              <div class="field upload-field"><label for="signatureUpload">Signatory 1 signature</label><input type="file" id="signatureUpload" accept="image/png,image/jpeg,image/webp"><label class="signature-remove-option"><input type="checkbox" id="removeSignatureBg" checked> Remove light background</label><small>Works best with dark ink on a light, plain background.</small><div class="signature-controls"><div class="field range-field"><label for="signatureWidth">Signature size <span id="signatureWidthValue">75 px</span></label><input type="range" id="signatureWidth" min="30" max="300" value="75"></div><div class="field range-field"><label for="signatureRotation">Rotation <span id="signatureRotationValue">0°</span></label><input type="range" id="signatureRotation" min="-180" max="180" value="0"></div><div class="field range-field"><label for="signatureX">Horizontal position <span id="signatureXValue">0 px</span></label><input type="range" id="signatureX" min="-120" max="120" value="0"></div><div class="field range-field"><label for="signatureY">Vertical position <span id="signatureYValue">0 px</span></label><input type="range" id="signatureY" min="-60" max="60" value="0"></div></div></div>
+              <div class="field upload-field"><label for="signature2Upload">Signatory 2 signature</label><input type="file" id="signature2Upload" accept="image/png,image/jpeg,image/webp"><small>Independent adjustments for signatory 2.</small><div class="signature-controls"><div class="field range-field"><label for="signature2Width">Signature size <span id="signature2WidthValue">75 px</span></label><input type="range" id="signature2Width" min="30" max="300" value="75"></div><div class="field range-field"><label for="signature2Rotation">Rotation <span id="signature2RotationValue">0°</span></label><input type="range" id="signature2Rotation" min="-180" max="180" value="0"></div><div class="field range-field"><label for="signature2X">Horizontal position <span id="signature2XValue">0 px</span></label><input type="range" id="signature2X" min="-120" max="120" value="0"></div><div class="field range-field"><label for="signature2Y">Vertical position <span id="signature2YValue">0 px</span></label><input type="range" id="signature2Y" min="-60" max="60" value="0"></div></div></div>
+              <div class="panel-footer"><button class="text-button" id="resetStyle">Reset styling</button></div>
+            </div>
+            <div class="property-panel" id="elementsPanel"><div class="panel-intro"><strong>Canvas controls</strong><small>Set up your workspace.</small></div>
+              <label class="toggle-row"><span><strong>Show grid</strong><small>Helpful alignment guides</small></span><input type="checkbox" id="gridToggle"></label>
+              <label class="toggle-row"><span><strong>Snap to grid</strong><small>Keep elements aligned</small></span><input type="checkbox" id="snapToggle" checked></label>
+              <label class="toggle-row"><span><strong>Mobile preview</strong><small>Preview at a smaller scale</small></span><input type="checkbox" id="mobileToggle"></label>
+              <div class="field"><label>Canvas zoom <span id="zoomLabel">100%</span></label><div class="zoom-controls"><button id="zoomOut">−</button><input id="zoomRange" type="range" min="60" max="120" value="100"><button id="zoomIn">＋</button><button id="zoomFit">Fit</button></div></div>
+              <div class="field"><label>Image positioning</label><small>Logo, photo, and signature images appear on your certificate when uploaded.</small></div>
+              <div class="panel-footer"><button class="text-button" id="resetDesign">Reset design</button></div>
+            </div>
+          </aside>
+          <section class="preview-area" id="previewArea"><div class="preview-top"><div><span class="preview-dot"></span><strong>Live preview</strong><span class="preview-size">A4 landscape · 297 × 210 mm</span></div><div class="preview-controls"><button class="icon-button" id="fullscreenButton" title="Fullscreen preview">⛶</button><button class="icon-button" id="printButton" title="Print certificate">⎙</button></div></div>
+            <div class="canvas-stage" id="canvasStage"><article class="certificate classic" id="certificate">
+              <div class="cert-inner">
+                <div class="cert-topline"><span class="cert-ornament">✦</span><img id="logoPreview" class="cert-logo hidden" alt="Organization logo"><span class="cert-org" data-field="organization">NORTHSTAR ACADEMY</span><span class="cert-ornament">✦</span></div>
+                <div class="cert-kicker">P R O U D L Y  P R E S E N T S</div>
+                <h2 class="cert-title" data-field="title">Certificate of Achievement</h2>
+                <div class="cert-rule"><span>✦</span></div>
+                <p class="cert-subtitle" data-field="subtitle">is hereby recognized for</p>
+                <h1 class="cert-recipient" data-field="recipient">Alexandra Morgan</h1>
+                <div class="recipient-photo hidden" id="photoFrame"><img id="photoPreview" alt="Recipient"></div>
+                <div class="cert-course" data-field="course">EXCELLENCE IN DESIGN</div>
+                <p class="cert-description" data-field="description">Outstanding dedication, creativity, and commitment to excellence.</p>
+                <p class="cert-additional hidden" data-field="additional"></p>
+                <div class="cert-bottom"><div class="signatory-preview-row" id="signatoryPreviewRow"><div class="sign-block"><img id="signaturePreview" class="cert-signature hidden" alt="Signatory 1 signature"><div class="sign-line"></div><strong data-field="sign1">Jordan Ellis</strong><small data-field="role1">Director</small></div><div class="sign-block"><img id="signature2Preview" class="cert-signature hidden" alt="Signatory 2 signature"><div class="sign-line"></div><strong data-field="sign2">Casey Nguyen</strong><small data-field="role2">Program Lead</small></div></div><div class="extra-signatory-preview hidden" id="extraSignatoryPreview"></div><div class="cert-meta"><span data-field="location">New York, NY</span><strong data-field="date">02 October 2026</strong><small data-field="certId">CERT-2026-000001</small></div></div>
+                <div class="cert-issued" data-field="issuedBy">Office of the Director</div><div class="qr-mark hidden" id="qrMark"></div>
+              </div>
+            </article></div>
+            <div class="preview-bottom"><span><span class="keyboard-hint">TIP</span> Your certificate is print-ready at A4 landscape.</span><button class="text-button" id="downloadPng">Download PNG ↓</button></div>
+          </section>
+        </div>
+        <div class="mobile-nav"><button data-view="dashboard">⌂<small>Home</small></button><button data-view="templates">▦<small>Templates</small></button><button data-view="editor" class="selected">✳<small>Create</small></button><button data-view="designs">▤<small>Designs</small></button></div>
+      </section>
+      <section class="view" id="settingsView"><div class="page-heading"><div><div class="eyebrow">PREFERENCES</div><h1>Settings<span class="period">.</span></h1><p class="subhead">Manage this browser workspace.</p></div></div><div class="settings-card"><h3>Local workspace</h3><p>Your certificate designs are stored in this browser using local storage. They are not uploaded to a server.</p><div class="setting-row"><div><strong>Saved designs</strong><small id="settingsCount">0 designs in this browser</small></div><button class="outline-button" id="exportData">Export workspace data</button></div><div class="setting-row"><div><strong>Clear workspace</strong><small>Remove all locally saved designs.</small></div><button class="danger-button" id="clearAll">Delete all designs</button></div></div></section>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="modal-backdrop hidden" id="modal"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-icon">✦</div><h2 id="modalTitle">A little detail first</h2><p id="modalMessage">Complete the required fields to create your certificate.</p><div class="modal-actions"><button class="outline-button" id="modalCancel">Keep editing</button><button class="primary" id="modalConfirm">Continue</button></div></div></div>
+<div class="modal-backdrop hidden" id="authModal"><form class="modal auth-modal" id="authForm" role="dialog" aria-modal="true" aria-labelledby="authTitle"><button class="auth-close" type="button" id="closeAuth" aria-label="Close">×</button><div class="modal-icon">✦</div><h2 id="authTitle">Welcome back</h2><p id="authDescription">Log in to your CertiForge account.</p><div class="field" id="authNameWrap"><label for="authName">Your name</label><input id="authName" autocomplete="name" placeholder="Jane Smith"></div><div class="field"><label for="authEmail">Email address</label><input id="authEmail" type="email" required autocomplete="email" placeholder="you@example.com"></div><div class="field"><label for="authPassword">Password</label><input id="authPassword" type="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters"></div><p class="auth-message" id="authMessage" role="status"></p><button class="primary auth-submit" id="authSubmit" type="submit">Log in</button><p class="auth-switch" id="authSwitchText">New to CertiForge? <button type="button" id="switchAuth">Create an account</button></p></form></div>
+<script>window.CERTIFORGE_SUPABASE={url:"https://tzyvilgpjexwwtvhjkta.supabase.co",publishableKey:"sb_publishable_EIeV6sKMaB9OHS5BAonkjg_nGAvglsh"};</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="script.js"></script>
+</body></html>
+
